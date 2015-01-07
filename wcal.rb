@@ -34,23 +34,36 @@ end
 def printCal(date_)
   wk = date_
   cur_month = wk.month
-  idx = 7 - wk.wday + 1
+  wday = wk.wday == 0 ? 7 : wk.wday
 
   print "\tM\tT\tW\tT\tF\tS\tS\n"
+
   
+  printf("%d\t", wk.cweek)
+  (wday - 1).times{
+    print "\t"
+  }
+
+  (7 - (wday - 1)).times{
+    printf("%d\t", wk.day)
+    wk += 1
+  }
+  print "\n"
+  rowcnt = 1
   while (cur_month == wk.month)
     printf("%d\t", wk.cweek)
-    (wk.wday - 1).times {
-      print "\t"
-    }
-    idx.times{|i|
+    7.times{|i|
       printf("%d\t", wk.day)
       wk += 1
       if (cur_month != wk.month)
         break
       end
     }
-    idx = 7
+    rowcnt += 1
+    print "\n"
+  end
+
+  if (rowcnt < 6)
     print "\n"
   end
 end
@@ -59,7 +72,8 @@ ret = checkOption(ARGV)
 if (!ret)
   exit
 end
-  
+
+print "\n"
 if (ARGV.length == 2)
   from = cnvDate(ARGV[0] + "-01")
   to = cnvDate(ARGV[1] + "-01")
@@ -72,6 +86,11 @@ printCal(wk)
 print "\n"
 
 wk = wk >> 1
+
+if (to == nil)
+  exit
+end
+
 while ((wk <=> to) <= 0)
   printCal(wk)
   print "\n"
